@@ -29,10 +29,38 @@ question ──► BM25 (sparse) ──┐
 | 11. Demo | `ask()` returns the answer with cited sources, and abstains on out-of-scope questions |
 
 ## Results
-<!-- RESULTS -->
-_Run the notebook to reproduce: results are printed in the benchmark sections._
+**Retrieval** (1,000 questions, 2,067 passages)
+
+| Retriever | Recall@1 | Recall@3 | Recall@10 | MRR@10 | ms/query |
+|---|---|---|---|---|---|
+| BM25 | 0.791 | 0.908 | 0.958 | 0.853 | 7.2 |
+| Dense (bge-small + FAISS) | 0.677 | 0.854 | 0.943 | 0.772 | 0.7 |
+| Hybrid (RRF) | 0.773 | 0.922 | 0.974 | 0.851 | 8.1 |
+| **Hybrid + cross-encoder re-rank** | **0.894** | **0.975** | **0.986** | **0.933** | 49.7 |
+
+**End-to-end answers** (300 questions, Qwen2.5-1.5B-Instruct)
+
+| Setting | Exact Match | F1 |
+|---|---|---|
+| Closed-book (no retrieval) | 0.070 | 0.151 |
+| RAG · dense top-3 | 0.587 | 0.683 |
+| **RAG · hybrid + re-rank top-3** | **0.660** | **0.774** |
+| Oracle (gold passage) | 0.703 | 0.817 |
+
+**Key findings**
+- Retrieval multiplies answer quality by ~10x for a small LLM, and the best pipeline gets within 4 EM points of the oracle ceiling.
+- Re-ranking is the single most effective component (+10 points Recall@1 over hybrid).
+- After re-ranking, only **0.7%** of errors come from retrieval: the generator is now the bottleneck.
+- The system answers with cited sources in ~0.3 s and replies `unknown` to out-of-scope questions.
+
+<p align="center"><img src="images/retrieval_benchmark.png" width="760"></p>
+<p align="center"><img src="images/answer_quality.png" width="620"></p>
+
+> Caveat: SQuAD questions were written while reading the passage, which favours lexical retrieval; real user queries would benefit more from dense/hybrid search.
 
 ## Run it
+The notebook is committed **with all outputs** from a Colab run. For the best reading experience (styled section headers), view it on [nbviewer](https://nbviewer.org/github/ahmedbouzidi304/rag-question-answering/blob/main/rag_question_answering.ipynb): GitHub and Colab strip the inline CSS.
+
 Click **Open in Colab**, select *Runtime → Change runtime type → T4 GPU*, then *Run all* (about 10-15 minutes).
 
 ## Tech stack
