@@ -59,7 +59,7 @@ question ──► BM25 (sparse) ──┐
 > Caveat: SQuAD questions were written while reading the passage, which favours lexical retrieval; real user queries would benefit more from dense/hybrid search.
 
 ## Run it
-The notebook is committed **with all outputs** from a Colab run. For the best reading experience (styled section headers), view it on [nbviewer](https://nbviewer.org/github/ahmedbouzidi304/rag-question-answering/blob/main/rag_question_answering.ipynb): GitHub and Colab strip the inline CSS.
+The notebook is committed **with all outputs** from a Colab run. It renders with styled section headers on GitHub and [nbviewer](https://nbviewer.org/github/ahmedbouzidi304/rag-question-answering/blob/main/rag_question_answering.ipynb); Colab shows the headers as plain text because it strips inline CSS.
 
 Click **Open in Colab**, select *Runtime → Change runtime type → T4 GPU*, then *Run all* (about 10-15 minutes).
 
